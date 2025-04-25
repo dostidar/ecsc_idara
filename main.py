@@ -32,7 +32,8 @@ def proxy_request():
         return jsonify({'error': 'Failed to proxy request', 'details': str(e)}), 500
 
 def run_flask():
-    app.run(host='0.0.0.0', port=4897)
+    print("Starting Flask server...")
+    app.run(host='127.0.0.1', port=4897)
 
 # ---------- Flet UI ----------
 server_process = None
@@ -40,7 +41,15 @@ server_process = None
 def main(page: ft.Page):
     global server_process
     page.title = "Flask Proxy Controller"
-    log_box = ft.TextField(multiline=True, read_only=True, expand=True, label="Logs")
+    page.scroll = ft.ScrollMode.AUTO
+    log_box = ft.TextField(
+        multiline=True,
+        read_only=True,
+        expand=True,
+        label="Logs",
+        min_lines=15,
+        max_lines=30
+    )
     start_button = ft.ElevatedButton("تشغيل السيرفر", icon=ft.icons.PLAY_ARROW)
     stop_button = ft.ElevatedButton("إيقاف السيرفر", icon=ft.icons.STOP, disabled=True)
 
@@ -50,7 +59,7 @@ def main(page: ft.Page):
             server_process = Process(target=run_flask)
             server_process.start()
             stop_button.disabled = False
-            log_box.value += "Server started on http://localhost:4897\\n"
+            log_box.value += "Server started on http://localhost:4897\n"
             page.update()
 
     def stop_server(e):
@@ -59,13 +68,23 @@ def main(page: ft.Page):
             server_process.terminate()
             server_process = None
             stop_button.disabled = True
-            log_box.value += "Server stopped.\\n"
+            log_box.value += "Server stopped.\n"
             page.update()
 
     start_button.on_click = start_server
     stop_button.on_click = stop_server
 
-    page.add(ft.Row([start_button, stop_button]), log_box)
+    page.add(
+        ft.Container(
+            content=log_box,
+            padding=20,
+            expand=True
+        ),
+        ft.Container(
+            content=ft.Row([start_button, stop_button], alignment=ft.MainAxisAlignment.CENTER),
+            padding=ft.padding.only(top=30, bottom=30)
+        )
+    )
 
 if __name__ == "__main__":
     ft.app(target=main)
