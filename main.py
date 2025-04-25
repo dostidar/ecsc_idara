@@ -1,11 +1,10 @@
-
 from flask import Flask, request, jsonify  
 import requests
 
 app = Flask(__name__)
 
 # Original server URL  
-ORIGINAL_SERVER_URL = 'http://192.168.0.121:8888/send_captcha'
+ORIGINAL_SERVER_URL = 'http://91.144.20.27:4897/send_captcha'
 
 @app.route('/send_captcha', methods=['POST', 'GET', 'OPTIONS'])
 def proxy_request():
