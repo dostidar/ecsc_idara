@@ -38,27 +38,28 @@ def run_flask():
 server_process = None
 
 def main(page: ft.Page):
+    global server_process
     page.title = "Flask Proxy Controller"
     log_box = ft.TextField(multiline=True, read_only=True, expand=True, label="Logs")
-    start_button = ft.ElevatedButton("ØªØ´ØºÙŠÙ„ Ø§Ù„Ø³ÙŠØ±ÙØ±", icon=ft.icons.PLAY_ARROW)
-    stop_button = ft.ElevatedButton("Ø¥ÙŠÙ‚Ø§Ù Ø§Ù„Ø³ÙŠØ±ÙØ±", icon=ft.icons.STOP, disabled=True)
+    start_button = ft.ElevatedButton("تشغيل السيرفر", icon=ft.icons.PLAY_ARROW)
+    stop_button = ft.ElevatedButton("إيقاف السيرفر", icon=ft.icons.STOP, disabled=True)
 
     def start_server(e):
-        nonlocal server_process
+        global server_process
         if server_process is None:
             server_process = Process(target=run_flask)
             server_process.start()
             stop_button.disabled = False
-            log_box.value += "Server started on http://localhost:4897\n"
+            log_box.value += "Server started on http://localhost:4897\\n"
             page.update()
 
     def stop_server(e):
-        nonlocal server_process
+        global server_process
         if server_process:
             server_process.terminate()
             server_process = None
             stop_button.disabled = True
-            log_box.value += "Server stopped.\n"
+            log_box.value += "Server stopped.\\n"
             page.update()
 
     start_button.on_click = start_server
